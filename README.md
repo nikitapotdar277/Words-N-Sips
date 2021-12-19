@@ -1,2 +1,2 @@
 # wordsNsips
-A Cafe Booking Reservation Website with Future Focus on Inventery Management
+A Cafe Booking Reservation Website with Future Focus on Inventory Management
