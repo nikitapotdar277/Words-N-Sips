@@ -1,0 +1,85 @@
+{% extends "layout.html" %} {% block body %} {% include "includes/message.html"
+%}
+
+<h3>Recent orders</h3>
+<hr />
+
+<div class="row">
+{% if orders %}
+  {% for id in orders %}
+  <div class="col-4" id="print_{{id}}">
+    <div class="card m-2 overflow-scroll" style="height: 20rem">
+      <div class="card-body">
+        <h5 class="card-title">
+          {{id.order_id}} | {{id.name}} |
+          {{id.start_time}} | Table {{id.table}} |
+          {{id.location | capitalize}}
+        </h5>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Sr no.</th>
+              <th scope="col">Item</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in id.order %}
+            {% if "entry_fee" in orders %}
+            
+            <!-- <tr>
+              <th scope="row">{{item.name}}</th>
+              <td>Entry Fee</td>
+              <td>{{orders.quantity}}</td>
+              <td>{{item.entry_fee}}</td>
+            </tr> -->
+            {% else %}
+            <tr>
+              <td>{{order.name}}</td>
+              <td>{{order.quantity}}</td>
+              <td>{{order.amount}}</td>
+            </tr>
+
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="text-right">Total: &#8377; {{id.total}}</div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-primary" onclick="printDiv(`print_{{loop.index}}`)">
+          Print
+        </button>
+        <button class="btn btn-success">
+          <a class="text-white text-decoration-none" href="{{url_for('checkout_order', order_id = id.order_id)}}">Checkout
+          </a>
+        </button>
+        <a class="text-black text-decoration-none" href="{{url_for('add_product', order_id=id)}}">
+          <button class="btn btn-outline-secondary">&plus;</button>
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endfor %} {% else %} <span class="ms-2">No orders to display!</span> {%
+  endif %}
+</div>
+
+{% endblock %} {% block scripts %}
+
+<script>
+  setInterval(() => {
+    setInterval(location.reload(), 1000);
+  }, 30000);
+  function printDiv(divName) {
+    var printContents = document.getElementById(divName);
+    var cardFooter = printContents.getElementsByClassName("card-footer")[0];
+    cardFooter.remove();
+    w = window.open();
+    w.document.write(printContents.innerHTML);
+    w.print();
+    w.close();
+  }
+</script>
+
+{% endblock %}
